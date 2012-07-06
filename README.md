@@ -1,4 +1,6 @@
-postgresql-http-server
-======================
+postgrehttp
+===========
 
-PostgreSQL HTTP API Server
+PostgreSQL HTTP API
+
+DISCLAIMER: Experimental work at this time.

@@ -1,0 +1,27 @@
+{
+    "name": "postgresql-http-server",
+    "preferGlobal": "true",
+    "version": "0.0.1",
+    "author": "Björn Harrtell <bjorn@wololo.org>",
+    "description": "PostgreSQL HTTP API Server",
+    "bin": {
+        "postgresql-http-server": "./bin/postgresql-http-server"
+    },
+    "main": "./lib/postgresql-http-server.coffee",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bjornharrtell/postgresql-http-server.git"
+    },
+    "keywords": [
+        "cli",
+        "postgresql",
+        "http",
+        "server"
+    ],
+    "dependencies": {
+        "express": "2.5.11",
+        "pg": "0.7.2",
+        "log": "1.3.0"
+    },
+    "license": "MIT"
+}
