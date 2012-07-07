@@ -1,4 +1,3 @@
-pg = require('pg')
 express = require('express')
 log = new (require('log'))(if process.env.NODE_ENV is 'development' then 'debug' else 'info')
 
@@ -18,12 +17,7 @@ start = (argv) ->
     passwordString = if argv.password then ":#{argv.password}" else ""
     connectionString = "tcp://#{argv.user}#{passwordString}@#{argv.dbhost}/#{argv.database}"
 
-    query = (sql, callback) ->
-        log.debug "Requesting connection to PostgreSQL with " + connectionString
-        pg.connect connectionString, (err, client) ->
-            if err then log.error JSON.stringify(err) else client.query sql, callback
-
-    exports.query = query
+    exports.db = require('./db')(log, connectionString)
 
     log.info "Setting up resources"
     require('./resources/root')(exports)

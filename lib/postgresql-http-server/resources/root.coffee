@@ -1,20 +1,13 @@
 module.exports = (server) ->
     log = server.log
+    db = server.db
     app = server.app
-    
-    query = (sql, res, callback) -> 
-        server.query sql, (err, result) ->
-            if err
-                log.error JSON.stringify(err)
-                res.send err, 500
-            else
-                callback result
                 
     log.debug "Setting up root resource"
     app.get '/', (req, res) ->
         log.info "Requesting implementation information"
         sql = "SELECT * FROM information_schema.sql_implementation_info WHERE implementation_info_id LIKE '18'"
-        query sql, res, (result) ->
+        db.query sql, res, (result) ->
             versionName = result.rows[0].character_value
             res.send
                 version: null
@@ -26,7 +19,7 @@ module.exports = (server) ->
     app.get '/db', (req, res) ->
         log.info "Requesting databases information"
         sql = "SELECT * FROM pg_database"
-        query sql, res, (result) ->
+        db.query sql, res, (result) ->
             databaseNames = (row.datname for row in result.rows)
             res.send
                 children: databaseNames
@@ -41,7 +34,7 @@ module.exports = (server) ->
         databaseName = req.params.databaseName
         log.info "Requesting schemas information for database #{databaseName}"
         sql = "SELECT * FROM information_schema.schemata WHERE catalog_name LIKE '#{databaseName}'"
-        query sql, res, (result) ->
+        db.query sql, res, (result) ->
             res.send
                 children: (row.schema_name for row in result.rows)
     
@@ -56,7 +49,7 @@ module.exports = (server) ->
         schemaName = req.params.schemaName
         log.info "Requesting tables information for schema #{schemaName}"
         sql = "SELECT * FROM pg_tables WHERE schemaname LIKE '#{schemaName}'"
-        query sql, res, (result) ->
+        db.query sql, res, (result) ->
             res.send
                 children: (row.tablename for row in result.rows)
     
@@ -64,7 +57,7 @@ module.exports = (server) ->
     path = '/db/:databaseName/schemas/:schemaName/tables/:tableName'
     app.get path, (req, res) ->
         sql = "SELECT * FROM #{req.params.tableName}"
-        query sql, res, (result) ->
+        db.query sql, res, (result) ->
             res.send result.rows
     app.post path, (req, res) ->
         fields = []
@@ -75,13 +68,13 @@ module.exports = (server) ->
         fields = fields.join ','
         values = values.join ','
         sql = "insert into #{req.params.tableName} (" + fields + ") VALUES (" + values + ")"
-        query sql, res, (result) ->
+        db.query sql, res, (result) ->
             res.send 'ok'
     
     log.debug "Setting up row resource"
     path = '/db/:databaseName/schemas/:schemaName/tables/:tableName/:id'
     app.get path, (req, res) ->
         sql = "SELECT * FROM #{req.params.tableName} WHERE id = #{req.params.id}"
-        query sql, res, (result) ->
+        db.query sql, res, (result) ->
             if result.rows.length is 1 then res.send result.rows[0] else res.send 404
 
