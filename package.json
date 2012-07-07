@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "author": "Björn Harrtell <bjorn@wololo.org>",
     "description": "PostgreSQL HTTP API Server",
+    "homepage": "https://github.com/bjornharrtell/postgresql-http-server",
     "bin": "bin/postgresql-http-server",
     "main": "lib/postgresql-http-server.coffee",
     "preferGlobal": "true",
