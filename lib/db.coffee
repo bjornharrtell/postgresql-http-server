@@ -6,7 +6,7 @@ module.exports = (log, connectionString) ->
 
     _query = (sql, callback) ->
         pg.connect connectionString, (err, client) ->
-            if err then log.error JSON.stringify(err) else client.query sql, callback
+            if err then callback err else client.query sql, callback
 
     query = (sql, res, callback) ->
         log.debug sql
