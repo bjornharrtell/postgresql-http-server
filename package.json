@@ -5,7 +5,7 @@
     "description": "PostgreSQL HTTP API Server",
     "homepage": "https://github.com/bjornharrtell/postgresql-http-server",
     "bin": "bin/postgresql-http-server",
-    "main": "lib/postgresql-http-server.coffee",
+    "main": "lib/cli",
     "preferGlobal": "true",
     "repository": {
         "type": "git",

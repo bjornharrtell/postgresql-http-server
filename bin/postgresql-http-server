@@ -4,4 +4,4 @@ if not process.env.NODE_ENV then process.env.NODE_ENV = 'production'
 
 path = require 'path'
 fs   = require 'fs'
-require path.join __dirname, '../lib/postgresql-http-server/cli.coffee'
+require path.join __dirname, '../lib/cli.coffee'
