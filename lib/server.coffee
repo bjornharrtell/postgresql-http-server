@@ -1,9 +1,9 @@
 # Server implementation
 
-express = require('express')
+express = require 'express'
 log = new (require('log'))(if process.env.NODE_ENV is 'development' then 'debug' else 'info')
-
 app = express.createServer()
+resources = require './resources'
 
 app.configure ->
   app.use express.bodyParser()
@@ -19,24 +19,22 @@ start = (argv) ->
     passwordString = if argv.password then ":#{argv.password}" else ""
     connectionString = "tcp://#{argv.user}#{passwordString}@#{argv.dbhost}/#{argv.database}"
 
-    # export for use in resources
     exports.db = require('./db')(log, connectionString)
 
     log.info "Setting up resources"
-    require('./resources/root')(exports)
-    require('./resources/db')(exports)
-    require('./resources/database')(exports)
-    require('./resources/schemas')(exports)
-    require('./resources/schema')(exports)
-    require('./resources/tables')(exports)
-    require('./resources/table')(exports)
-    require('./resources/rows')(exports)
-    require('./resources/row')(exports)
+    resources.root exports
+    resources.db exports
+    resources.database exports
+    resources.schemas exports
+    resources.schema exports
+    resources.tables exports
+    resources.table exports
+    resources.rows exports
+    resources.row exports
         
     app.listen argv.port, -> 
         log.info "Listening on port #{app.address().port} in #{app.settings.env} mode"
 
-# exports for use in resources
 exports.log = log
 exports.app = app
 exports.start = start
