@@ -1,6 +1,6 @@
 {
     "name": "postgresql-http-server",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "author": "Björn Harrtell <bjorn@wololo.org>",
     "description": "PostgreSQL HTTP API Server",
     "homepage": "https://github.com/bjornharrtell/postgresql-http-server",

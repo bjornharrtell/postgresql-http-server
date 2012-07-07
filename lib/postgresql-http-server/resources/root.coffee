@@ -1,4 +1,4 @@
-process = (server) ->
+module.exports = (server) ->
     log = server.log
     app = server.app
     
@@ -9,9 +9,7 @@ process = (server) ->
                 res.send err, 500
             else
                 callback result
-    
-    log.info "Setting up resources"
-    
+                
     log.debug "Setting up root resource"
     app.get '/', (req, res) ->
         log.info "Requesting implementation information"
@@ -86,6 +84,4 @@ process = (server) ->
         sql = "SELECT * FROM #{req.params.tableName} WHERE id = #{req.params.id}"
         query sql, res, (result) ->
             if result.rows.length is 1 then res.send result.rows[0] else res.send 404
-
-exports.process = process
 

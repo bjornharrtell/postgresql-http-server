@@ -24,5 +24,4 @@ argv = optimist.demand(['port', 'dbhost', 'dbport', 'database', 'user']).argv
 if argv.help
     console.log optimist.help()
 else
-    server = require './server'
-    server.start(argv)
+    require('./server').start(argv)

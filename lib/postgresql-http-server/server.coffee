@@ -2,8 +2,6 @@ pg = require('pg')
 express = require('express')
 log = new (require('log'))(if process.env.NODE_ENV is 'development' then 'debug' else 'info')
 
-root = require('./root')
-
 app = express.createServer()
 
 app.configure ->
@@ -25,12 +23,14 @@ start = (argv) ->
         pg.connect connectionString, (err, client) ->
             if err then log.error JSON.stringify(err) else client.query sql, callback
 
-    root.process
-        log: log
-        app: app
-        query: query
+    exports.query = query
+
+    log.info "Setting up resources"
+    require('./resources/root')(exports)
         
     app.listen argv.port, -> 
         log.info "Listening on port #{app.address().port} in #{app.settings.env} mode"
 
+exports.log = log
+exports.app = app
 exports.start = start
