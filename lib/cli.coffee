@@ -1,3 +1,5 @@
+# CLI main entry point
+
 optimist = require 'optimist'
 optimist.usage 'PostgreSQL HTTP API Server'
 optimist.options 'port',
