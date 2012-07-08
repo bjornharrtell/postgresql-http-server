@@ -8,9 +8,10 @@ module.exports = (server) ->
     path = '/db/:databaseName/schemas/:schemaName/tables/:tableName/rows'
     
     app.get path, (req, res) ->
-        # TODO: allow for user specificed queries, perhaps using req.query params
-    
         sql = "SELECT * FROM #{req.params.tableName}"
+        if req.query.where then sql += " WHERE #{req.query.where}"
+        if req.query.limit then sql += " LIMIT #{req.query.limit}"
+        if req.query.offset then sql += " OFFSET #{req.query.offset}"
         db.query sql, res, (result) ->
             res.send result.rows
     
