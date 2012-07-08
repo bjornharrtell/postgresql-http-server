@@ -23,7 +23,7 @@ module.exports = (server) ->
             values.push if typeof v is "string" then "'#{v}'" else v
         fields = fields.join ','
         values = values.join ','
-        sql = "INSERT INTO #{req.params.tableName} (" + fields + ") VALUES (" + values + ") RETURNING id"
+        sql = "INSERT INTO #{req.params.tableName} (#{fields}) VALUES (#{values}) RETURNING id"
         db.query sql, res, (result) ->
             res.contentType 'application/json'
             id = result.rows[0].id
