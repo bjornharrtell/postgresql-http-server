@@ -27,17 +27,17 @@ NOTE: Requires node.js
 ## API Usage
 
 The API is discoverable which means you can access the root resource at /
-and follow links to subresources from there. But lets say you have a database
-named testdb with a table named testtable in the public schema. You can then 
+and follow links to subresources from there but lets say you have a database
+named testdb with a table named testtable in the public schema you can then 
 do the following operations:
 
-    GET row data at:
+    GET rows at:
     /db/testdb/schemas/public/tables/testtable/rows
     
-    GET row data with where filter like:
+    GET rows with where filter like:
     /db/testdb/schemas/public/tables/testtable/rows?where=id%3D3
     
-    GET paginated row data with limit and offset params:
+    GET paginated rows with limit and offset params:
     /db/testdb/schemas/public/tables/testtable/rows?limit=10&offset=10
     
     GET a single row at:
@@ -47,3 +47,13 @@ do the following operations:
     /db/testdb/schemas/public/tables/testtable/rows
 
 The default and currently the only dataformat is JSON.
+
+## TODOs
+
+* Use parameterized queries and/or prepared statements for performance and barrier against SQL injection
+* Handle ORDER BY via orderby param
+* Handle PostGIS data
+* Handle row update via PUT
+* Handle row deletes via DELETE
+* Allow raw SQL queries?
+* Handle DDL stuff?
