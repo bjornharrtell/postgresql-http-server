@@ -1,6 +1,6 @@
 # PostgreSQL HTTP API Server
 
-Attempt to implement proposal at http://wiki.postgresql.org/wiki/HTTP_API
+Attempt to implement something like the proposal at http://wiki.postgresql.org/wiki/HTTP_API
 
 **DISCLAIMER**: Experimental work at this time.
 
@@ -45,3 +45,5 @@ do the following operations:
     
     POST a new row at:
     /db/testdb/schemas/public/tables/testtable/rows
+
+The default and currently the only dataformat is JSON.
