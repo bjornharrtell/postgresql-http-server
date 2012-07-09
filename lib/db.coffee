@@ -6,7 +6,8 @@ pg = require 'pg'
 
 module.exports = (log, connectionString, database) ->
     query = (config) ->
-        log.debug config.sql
+        log.debug "SQL: " + config.sql
+        log.debug "VALUES: " + JSON.stringify(config.values)
         
         callback = (err, result) ->
             if err

@@ -9,12 +9,23 @@ module.exports = (server) ->
     
     app.get path, (req, res) ->
         sql = "SELECT * FROM #{req.params.tableName}"
-        if req.query.where then sql += " WHERE #{req.query.where}"
-        if req.query.limit then sql += " LIMIT #{req.query.limit}"
-        if req.query.offset then sql += " OFFSET #{req.query.offset}"
+        values = []
+        count = 1
+        if req.query.where
+            # TODO: parameterize where
+            sql += " WHERE #{req.query.where}"
+        if req.query.limit
+            sql += " LIMIT $#{count}"
+            values.push parseInt req.query.limit
+            count += 1
+        if req.query.offset
+            sql += " OFFSET $#{count}"
+            values.push parseInt req.query.offset
+            count += 1
         db.query 
             sql: sql
             res: res
+            values: values
             callback: (result) ->
                 res.send result.rows
     
@@ -26,6 +37,7 @@ module.exports = (server) ->
             values.push if typeof v is "string" then "'#{v}'" else v
         fields = fields.join ','
         values = values.join ','
+        # TODO: parameterize insert
         sql = "INSERT INTO #{req.params.tableName} (#{fields}) VALUES (#{values}) RETURNING id"
         db.query 
             sql: sql
