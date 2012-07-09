@@ -1,3 +1,5 @@
+lexer = require('sql-parser').lexer
+
 module.exports = (server) ->
     log = server.log
     db = server.db
@@ -12,8 +14,15 @@ module.exports = (server) ->
         values = []
         count = 1
         if req.query.where
-            # TODO: parameterize where
-            sql += " WHERE #{req.query.where}"
+            sql += " WHERE "
+            tokens = lexer.tokenize req.query.where
+            for token in tokens
+                if token[0] is 'STRING' or token[0] is 'NUMBER'
+                    values.push token[1] #"'" + token[1] + "'"
+                    sql += "$#{count} "
+                    count += 1
+                else
+                    sql += "#{token[1]} "
         if req.query.limit
             sql += " LIMIT $#{count}"
             values.push parseInt req.query.limit

@@ -6,7 +6,7 @@ module.exports = (server) ->
     log.debug "Setting up table resource"
     
     path = '/db/:databaseName/schemas/:schemaName/tables/:tableName'
-    
+
     app.get path, (req, res) ->
         res.send
             children: ['columns', 'constraints', 'indexes', 'rules', 'triggers', 'rows']
