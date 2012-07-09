@@ -7,6 +7,10 @@ module.exports = (server) ->
     
     app.get '/db/:databaseName/schemas/:schemaName/tables', (req, res) ->
         sql = "SELECT * FROM pg_tables WHERE schemaname LIKE '#{req.params.schemaName}'"
-        db.query sql, res, (result) ->
-            res.send
-                children: (row.tablename for row in result.rows)
+        db.query 
+            sql: sql
+            res: res
+            database: req.params.databaseName
+            callback: (result) ->
+                res.send
+                    children: (row.tablename for row in result.rows)

@@ -12,8 +12,11 @@ module.exports = (server) ->
         if req.query.where then sql += " WHERE #{req.query.where}"
         if req.query.limit then sql += " LIMIT #{req.query.limit}"
         if req.query.offset then sql += " OFFSET #{req.query.offset}"
-        db.query sql, res, (result) ->
-            res.send result.rows
+        db.query 
+            sql: sql
+            res: res
+            callback: (result) ->
+                res.send result.rows
     
     app.post path, (req, res) ->
         fields = []
@@ -24,8 +27,11 @@ module.exports = (server) ->
         fields = fields.join ','
         values = values.join ','
         sql = "INSERT INTO #{req.params.tableName} (#{fields}) VALUES (#{values}) RETURNING id"
-        db.query sql, res, (result) ->
-            res.contentType 'application/json'
-            id = result.rows[0].id
-            id = if typeof id is "string" then "\"#{id}\"" else "#{id}"
-            res.send id, 201
+        db.query 
+            sql: sql
+            res: res
+            callback: (result) ->
+                res.contentType 'application/json'
+                id = result.rows[0].id
+                id = if typeof id is "string" then "\"#{id}\"" else "#{id}"
+                res.send id, 201

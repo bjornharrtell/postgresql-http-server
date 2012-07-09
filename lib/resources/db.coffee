@@ -7,7 +7,10 @@ module.exports = (server) ->
     
     app.get '/db', (req, res) ->
         sql = "SELECT * FROM pg_database"
-        db.query sql, res, (result) ->
-            databaseNames = (row.datname for row in result.rows)
-            res.send
-                children: databaseNames
+        db.query 
+            sql: sql
+            res: res
+            callback: (result) ->
+                databaseNames = (row.datname for row in result.rows)
+                res.send
+                    children: databaseNames

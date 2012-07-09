@@ -1,5 +1,3 @@
-# Server implementation
-
 express = require 'express'
 log = new (require('log'))(if process.env.NODE_ENV is 'development' then 'debug' else 'info')
 app = express.createServer()
@@ -17,9 +15,10 @@ app.configure 'production', ->
 
 start = (argv) ->
     passwordString = if argv.password then ":#{argv.password}" else ""
-    connectionString = "tcp://#{argv.user}#{passwordString}@#{argv.dbhost}/#{argv.database}"
+    connectionString = "tcp://#{argv.user}#{passwordString}@#{argv.dbhost}"
+    log.info "Using connection string #{connectionString}"
 
-    exports.db = require('./db')(log, connectionString)
+    exports.db = require('./db')(log, connectionString, argv.database)
 
     log.info "Setting up resources"
     resources.root exports

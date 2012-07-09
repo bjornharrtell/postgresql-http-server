@@ -7,6 +7,10 @@ module.exports = (server) ->
     
     app.get '/db/:databaseName/schemas', (req, res) ->
         sql = "SELECT * FROM information_schema.schemata WHERE catalog_name LIKE '#{req.params.databaseName}'"
-        db.query sql, res, (result) ->
-            res.send
-                children: (row.schema_name for row in result.rows)
+        db.query 
+            sql: sql
+            res: res
+            database: req.params.databaseName
+            callback: (result) ->
+                res.send
+                    children: (row.schema_name for row in result.rows)

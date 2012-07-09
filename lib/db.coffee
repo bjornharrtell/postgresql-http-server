@@ -1,22 +1,22 @@
-# Helper functions for db access
+###
+Helper functions for db access
+###
 
-pg = require('pg')
+pg = require 'pg'
 
-module.exports = (log, connectionString) ->
-
-    _query = (sql, callback) ->
-        pg.connect connectionString, (err, client) ->
-            if err then callback err else client.query sql, callback
-
-    query = (sql, res, callback) ->
-        log.debug sql
-    
-        _query sql, (err, result) ->
+module.exports = (log, connectionString, database) ->
+    query = (config) ->
+        log.debug config.sql
+        
+        callback = (err, result) ->
             if err
                 log.error JSON.stringify err
-                res.send err, 500
+                config.res.send err, 500
             else
-                callback result
+                config.callback result
+        
+        pg.connect connectionString + "/" + (config.database || database), (err, client) ->
+            if err then callback err else client.query config.sql, config.values || [], callback
 
     query: query
 

@@ -9,6 +9,10 @@ module.exports = (server) ->
     
     app.get path, (req, res) ->
         sql = "SELECT * FROM #{req.params.tableName} WHERE id = #{req.params.id}"
-        db.query sql, res, (result) ->
-            if result.rows.length is 1 then res.send result.rows[0] else res.send 404
+        db.query 
+            sql: sql
+            res: res
+            database: req.params.databaseName
+            callback: (result) ->
+                if result.rows.length is 1 then res.send result.rows[0] else res.send 404
 
