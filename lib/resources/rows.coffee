@@ -18,7 +18,7 @@ module.exports = (server) ->
             tokens = lexer.tokenize req.query.where
             for token in tokens
                 if token[0] is 'STRING' or token[0] is 'NUMBER'
-                    values.push token[1] #"'" + token[1] + "'"
+                    values.push token[1]
                     sql += "$#{count} "
                     count += 1
                 else
