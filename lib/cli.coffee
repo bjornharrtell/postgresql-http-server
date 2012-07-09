@@ -19,9 +19,13 @@ optimist.options 'user',
     default : process.env.USER
 optimist.options 'password',
     describe : 'PostgreSQL password'
+optimist.options 'cors',
+    describe : 'Enable CORS support'
 optimist.options 'help',
     describe : 'Show this message'
-argv = optimist.demand(['port', 'dbhost', 'dbport', 'database', 'user']).argv
+argv = optimist.boolean('cors')
+    .demand(['port', 'dbhost', 'dbport', 'database', 'user'])
+    .argv
 
 if argv.help
     console.log optimist.help()

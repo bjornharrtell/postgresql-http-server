@@ -19,6 +19,18 @@ start = (argv) ->
     log.info "Using connection string #{connectionString}"
 
     exports.db = require('./db')(log, connectionString, argv.database)
+    
+    if argv.cors
+        log.info "Enable Cross-origin Resource Sharing" 
+        app.options '/*', (req,res,next) ->
+            res.header 'Access-Control-Allow-Origin', '*'
+            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with'
+            next()
+
+        app.get '/*', (req,res,next) ->
+            res.header 'Access-Control-Allow-Origin', '*'
+            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with'
+            next()
 
     log.info "Setting up resources"
     resources.root exports

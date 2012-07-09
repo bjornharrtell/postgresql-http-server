@@ -22,6 +22,7 @@ NOTE: Requires node.js
       --database  PostgreSQL database  [required]  [default: <user>]
       --user      PostgreSQL username  [required]  [default: <user>]
       --password  PostgreSQL password
+      --cors      Enable CORS support  [boolean]
       --help      Show this message
 
 ## API Usage
@@ -31,30 +32,27 @@ and follow links to subresources from there but lets say you have a database
 named testdb with a table named testtable in the public schema you can then 
 do the following operations:
 
-    GET rows at:
-    /db/testdb/schemas/public/tables/testtable/rows
-    
-    GET rows filtered by where param like:
-    /db/testdb/schemas/public/tables/testtable/rows?where=id%3D3
-    
-    GET paginated rows with limit and offset params:
-    /db/testdb/schemas/public/tables/testtable/rows?limit=10&offset=10
-    
-    GET a single row at:
+    Retrieve (GET) or update (PUT) a single row at:
     /db/testdb/schemas/public/tables/testtable/rows/id
-    
-    POST a new row at:
+
+    Retrieve rows (GET), update rows (PUT) or create a new row (POST) at:
     /db/testdb/schemas/public/tables/testtable/rows
 
-The default and currently the only dataformat is JSON.
+The above resources accepts URL encoded parameters where, limit and offset
+where applicable. Example:
+
+    GET a maximum of 10 rows where cost>100 at:
+    /db/testdb/schemas/public/tables/testtable/rows?where=cost%3E100&limit=10
+
+The default and currently the only dataformat is JSON. POSTing or PUTing
+expects a single JSON object with properties corresponding to column names.
 
 ## TODOs
 
-* Use parameterized queries and/or prepared statements for performance and barrier against SQL injection
+* Use real primary key (current single row operations assume a primary key named id)
+* Optionally use authenticated user/password to connect to DB
 * Handle ORDER BY via orderby param
 * Handle PostGIS data
-* Handle row update via PUT
-* Handle row deletes via DELETE
 * Allow raw SQL queries?
 * Handle DDL stuff?
 

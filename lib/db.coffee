@@ -1,8 +1,9 @@
 ###
-Helper functions for db access
+Helper functions for DB access and SQL parsing
 ###
 
 pg = require 'pg'
+lexer = require('sql-parser').lexer
 
 module.exports = (log, connectionString, database) ->
     query = (config) ->
@@ -20,5 +21,48 @@ module.exports = (log, connectionString, database) ->
         pg.connect connectionStringDb, (err, client) ->
             if err then callback err else client.query config.sql, config.values || [], callback
 
+    parseWhere = (config, where) -> if where
+        config.sql += " WHERE "
+        tokens = lexer.tokenize where
+        for token in tokens
+            if token[0] is 'STRING' or token[0] is 'NUMBER'
+                config.values.push token[1]
+                config.sql += "$#{config.count}"
+                config.count += 1
+            else if token[0] is 'CONDITIONAL'
+                config.sql += " #{token[1].toUpperCase()} "
+            else 
+                config.sql += token[1]
+    
+    parseLimit = (config, limit) -> if limit
+        config.sql += " LIMIT $#{config.count}"
+        config.values.push parseInt limit
+        config.count += 1
+        
+    parseOffset = (config, offset) -> if offset
+        config.sql += " OFFSET $#{config.count}"
+        config.values.push parseInt offset
+        config.count += 1
+    
+    parseRow = (row) ->
+        fields = []
+        params = []
+        values = []
+        count = 1
+        for k,v of row
+            fields.push k
+            params.push "$#{count}"
+            values.push v
+            count += 1
+        
+        fields: fields.join ','
+        params: params.join ','
+        values: values
+        count: count
+    
     query: query
+    parseWhere: parseWhere
+    parseLimit: parseLimit
+    parseOffset: parseOffset
+    parseRow: parseRow
 

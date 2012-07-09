@@ -1,5 +1,3 @@
-lexer = require('sql-parser').lexer
-
 module.exports = (server) ->
     log = server.log
     db = server.db
@@ -8,46 +6,7 @@ module.exports = (server) ->
     log.debug "Setting up rows resource"
     
     path = '/db/:databaseName/schemas/:schemaName/tables/:tableName/rows'
-    
-    parseWhere = (config, where) -> if where
-        config.sql += " WHERE "
-        tokens = lexer.tokenize where
-        for token in tokens
-            if token[0] is 'STRING' or token[0] is 'NUMBER'
-                config.values.push token[1]
-                config.sql += "$#{config.count}"
-                config.count += 1
-            else if token[0] is 'CONDITIONAL'
-                config.sql += " #{token[1].toUpperCase()} "
-            else 
-                config.sql += token[1]
-    
-    parseLimit = (config, limit) -> if limit
-        config.sql += " LIMIT $#{config.count}"
-        config.values.push parseInt limit
-        config.count += 1
-        
-    parseOffset = (config, offset) -> if offset
-        config.sql += " OFFSET $#{config.count}"
-        config.values.push parseInt offset
-        config.count += 1
-    
-    parseRow = (row) ->
-        fields = []
-        params = []
-        values = []
-        count = 1
-        for k,v of config.row
-            fields.push k
-            params.push "$#{count}"
-            values.push v
-            count += 1
-        
-        fields: fields.join ','
-        params: params.join ','
-        values: values.join ','
-        count: count
-    
+
     app.get path, (req, res) ->
         config =
             sql: "SELECT * FROM #{req.params.tableName}"
@@ -57,9 +16,9 @@ module.exports = (server) ->
             callback: (result) ->
                 res.send result.rows
             
-        parseWhere config, req.query.where
-        parseLimit config, req.query.limit
-        parseOffset config, req.query.offset
+        db.parseWhere config, req.query.where
+        db.parseLimit config, req.query.limit
+        db.parseOffset config, req.query.offset
         
         db.query config
         
@@ -78,28 +37,31 @@ module.exports = (server) ->
                 res.send id, 201
      
      app.put path, (req, res) ->
-        parsedRow = parseRow req.body.row
+        parsedRow = db.parseRow req.body
         
         config =
-            sql: "UPDATE #{req.params.tableName} SET (#{fields}) = (#{params})"
+            sql: "UPDATE #{req.params.tableName} SET (#{parsedRow.fields}) = (#{parsedRow.params})"
             values: parsedRow.values
             res: res
+            count: parsedRow.count
             callback: (result) ->
                 res.send 200
             
-        parseWhere config, req.body.where
+        db.parseWhere config, req.query.where
         
         db.query config
      
      app.delete path, (req, res) ->
         config =
+            res: res
+            count: 1
             callback: (result) ->
                 res.send 200
                 
         if req.query.where
             config.sql = "DELETE FROM #{req.params.tableName}"
             config.values = []
-            parseWhere config, req.query.where
+            db.parseWhere config, req.query.where
         else
             config.sql = "TRUNCATE #{req.params.tableName}"
             
