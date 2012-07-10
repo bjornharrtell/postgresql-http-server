@@ -6,4 +6,4 @@ before_script:
   - psql -c 'CREATE DATABASE test;' -U postgres
   - psql -c 'CREATE SCHEMA test;' -U postgres
   - psql -c 'CREATE TABLE test (id SERIAL PRIMARY KEY, name VARCHAR);' -U postgres
-  - ./bin/postgresql-http-server --user postgres -database test &
+  - ./bin/postgresql-http-server --user postgres --database test &
