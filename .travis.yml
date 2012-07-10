@@ -4,5 +4,4 @@ node_js:
   - 0.8
 before_script:
   - psql -c 'create database test;' -U postgres
-after_install:
   - ./bin/postgres-http-server --user postgres
