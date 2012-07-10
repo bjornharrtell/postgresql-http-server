@@ -3,11 +3,14 @@ Helper functions for DB access and SQL parsing
 ###
 
 pg = require 'pg'
-lexer = require('sql-parser').lexer
+lexer = require './lexer'
 
 module.exports = (log, connectionString, database) ->
     query = (config) ->
         connectionStringDb = connectionString + "/" + (config.database || database)
+    
+        tokens = lexer.tokenize config.sql
+        config.sql = (token[1] for token in tokens).join " "
     
         log.debug "Sending query to #{connectionStringDb}\nSQL: #{config.sql}\nParameters: #{JSON.stringify(config.values)}"
         
@@ -31,9 +34,11 @@ module.exports = (log, connectionString, database) ->
                 config.count += 1
             else if token[0] is 'CONDITIONAL'
                 config.sql += " #{token[1].toUpperCase()} "
-            else 
+            else if token[0] is 'LITERAL'
+                config.sql += "\"#{token[1]}\""
+            else
                 config.sql += token[1]
-    
+                
     parseLimit = (config, limit) -> if limit
         config.sql += " LIMIT $#{config.count}"
         config.values.push parseInt limit
@@ -50,7 +55,7 @@ module.exports = (log, connectionString, database) ->
         values = []
         count = 1
         for k,v of row
-            fields.push k
+            fields.push "\"#{k}\""
             params.push "$#{count}"
             values.push v
             count += 1

@@ -1,3 +1,5 @@
+parseTable = require('./utils').parseTable
+
 module.exports = (server) ->
     log = server.log
     db = server.db
@@ -8,11 +10,13 @@ module.exports = (server) ->
     path = '/db/:databaseName/schemas/:schemaName/tables/:tableName/rows'
 
     app.get path, (req, res) ->
+        table = parseTable req
         config =
-            sql: "SELECT * FROM #{req.params.tableName}"
+            sql: "SELECT * FROM #{table}"
             values: []
             count: 1
             res: res
+            database: req.params.databaseName
             callback: (result) ->
                 res.send result.rows
             
@@ -25,11 +29,13 @@ module.exports = (server) ->
     app.post path, (req, res) ->
         parsedRow = parseRow req.body
 
-        sql = "INSERT INTO #{req.params.tableName} (#{parsedRow.fields}) VALUES (#{parsedRow.params}) RETURNING id"
+        table = parseTable req
+        sql = "INSERT INTO #{table} (#{parsedRow.fields}) VALUES (#{parsedRow.params}) RETURNING id"
         db.query 
             sql: sql
             res: res
             values: parsedRow.values
+            database: req.params.databaseName
             callback: (result) ->
                 res.contentType 'application/json'
                 id = result.rows[0].id
@@ -39,11 +45,13 @@ module.exports = (server) ->
      app.put path, (req, res) ->
         parsedRow = db.parseRow req.body
         
+        table = parseTable req
         config =
-            sql: "UPDATE #{req.params.tableName} SET (#{parsedRow.fields}) = (#{parsedRow.params})"
+            sql: "UPDATE #{table} SET (#{parsedRow.fields}) = (#{parsedRow.params})"
             values: parsedRow.values
             res: res
             count: parsedRow.count
+            database: req.params.databaseName
             callback: (result) ->
                 res.send 200
             
@@ -52,18 +60,20 @@ module.exports = (server) ->
         db.query config
      
      app.delete path, (req, res) ->
+        table = parseTable req
         config =
             res: res
             count: 1
+            database: req.params.databaseName
             callback: (result) ->
                 res.send 200
-                
+        
         if req.query.where
-            config.sql = "DELETE FROM #{req.params.tableName}"
+            config.sql = "DELETE FROM #{table}"
             config.values = []
             db.parseWhere config, req.query.where
         else
-            config.sql = "TRUNCATE #{req.params.tableName}"
+            config.sql = "TRUNCATE #{table}"
             
         db.query config
         

@@ -6,10 +6,11 @@ module.exports = (server) ->
     log.debug "Setting up schemas resource"
     
     app.get '/db/:databaseName/schemas', (req, res) ->
-        sql = "SELECT * FROM information_schema.schemata WHERE catalog_name LIKE '#{req.params.databaseName}'"
+        sql = "SELECT * FROM information_schema.schemata WHERE catalog_name = $1"
         db.query 
             sql: sql
             res: res
+            values: [req.params.databaseName]
             database: req.params.databaseName
             callback: (result) ->
                 res.send
