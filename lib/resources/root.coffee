@@ -6,11 +6,11 @@ module.exports = (server) ->
     log.debug "Setting up root resource"
     
     app.get '/', (req, res) ->
-        sql = "SELECT * FROM information_schema.sql_implementation_info WHERE implementation_info_id LIKE '18'"
+        sql = "SELECT * FROM information_schema.sql_implementation_info WHERE implementation_info_id = $1"
         db.query 
             sql: sql
             res: res
-            database: req.params.databaseName
+            values: ['18']
             callback: (result) ->
                 versionName = result.rows[0].character_value
                 res.send

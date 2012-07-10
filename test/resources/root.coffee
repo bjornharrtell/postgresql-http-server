@@ -1,33 +1,24 @@
-root = require '../../lib/resources/root'
+http = require 'http'
+assert = require 'assert'
 
-mockedServer =
-    log:
-        debug: ->
-    app:
-        get: (path, callback) ->
-            mockedServer.callback = callback
-    db:
-        query: (options) ->
-            options.callback
-                rows: [
-                    character_value: "09.01.0004"
-                ]
-                
-
-describe 'root', ->
-    it 'should answer a GET request with an object created from db instance info', ->
-        root mockedServer
+describe 'Root resource', ->
+    it 'should answer a GET request with an object created from db instance info', (done) ->
         
-        req =
-            params:
-                databaseName: 'test'
-        res =
-            send: (json) ->
-                expect(json).toEqual
-                    version : null
-                    version_human : '09.01.0004'
-                    description : 'PostgreSQL 09.01.0004'
-                    children : [ 'db' ]
-                       
-        mockedServer.callback req, res 
-
+        options = 
+            host: 'localhost',
+            port: 3000
+            path: '/',
+            method: 'GET'
+        
+        req = http.request options, (res) ->
+            res.on 'data', (chunk) ->
+                data = JSON.parse chunk
+                
+                assert data.version is null, 'version should be string'
+                assert typeof data.version_human is 'string', 'human should be string'
+                assert typeof data.description is 'string', 'description should be string'
+                assert data.children[0] is 'db', "should have child db"
+                
+                done()
+                
+        req.end()
