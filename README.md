@@ -4,6 +4,8 @@ Attempt to implement something like the proposal at http://wiki.postgresql.org/w
 
 **DISCLAIMER**: Experimental work at this time.
 
+[![Build Status](https://secure.travis-ci.org/bjornharrtell/postgresql-http-server.png?branch=master)](http://travis-ci.org/bjornharrtell/postgresql-http-server)
+
 ## Installing
 
 NOTE: Requires node.js
