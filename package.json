@@ -7,7 +7,7 @@
     "bin": "bin/postgresql-http-server",
     "main": "lib/cli.coffee",
     "scripts": {
-        "test": "mocha --require coffee-script --reporter dot test/**/*"
+        "test": "mocha --recursive --require coffee-script --reporter dot test/specs/**/*"
     },
     "preferGlobal": "true",
     "repository": {

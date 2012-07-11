@@ -27,7 +27,7 @@ module.exports = (server) ->
         db.query config
         
     app.post path, (req, res) ->
-        parsedRow = parseRow req.body
+        parsedRow = db.parseRow req.body
 
         table = parseTable req
         sql = "INSERT INTO #{table} (#{parsedRow.fields}) VALUES (#{parsedRow.params}) RETURNING id"
