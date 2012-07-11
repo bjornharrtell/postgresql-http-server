@@ -7,5 +7,5 @@ env:
   - NODE_ENV="development"
 before_script:
   - psql -c "CREATE DATABASE test;" -U postgres
-  - psql -f ./test/sql/init.sql -U postgres
+  - psql -f ./test/sql/init.sql -U postgres -d test
   - ./bin/postgresql-http-server --user postgres --database test &
