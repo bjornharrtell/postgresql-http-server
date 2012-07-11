@@ -11,7 +11,7 @@ describe 'Rows resource', ->
                 assert data.length is 0, '#{data.length} should be 0'
                 done()
         
-    it 'should answer a POST with status 2001', (done) ->
+    it 'should answer a POST with status 201', (done) ->
         test
             path: '/db/test/schemas/testschema/tables/testtable/rows',
             method: 'POST'
