@@ -52,12 +52,12 @@ expects a single JSON object with properties corresponding to column names.
 ## TODOs
 
 * Use real primary key (current single row operations assume a primary key named id)
+* Stream row data
 * Configurable max rows hard limit
 * Optionally use authenticated user/password to connect to DB
 * Handle ORDER BY via orderby param
 * Handle PostGIS data
-* Allow raw SQL queries?
-* Handle DDL stuff?
+* Optionally allow raw SQL
 
 ## License 
 
