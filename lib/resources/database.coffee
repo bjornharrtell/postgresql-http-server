@@ -7,4 +7,5 @@ module.exports = (server) ->
     
     app.get '/db/:databaseName', (req, res) ->
         res.send
+            type: 'database'
             children: ['schemas']

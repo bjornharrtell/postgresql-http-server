@@ -14,4 +14,5 @@ module.exports = (server) ->
             database: req.params.databaseName
             callback: (result) ->
                 res.send
+                    type: 'schemas'
                     children: (row.schema_name for row in result.rows)

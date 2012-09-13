@@ -9,6 +9,7 @@ module.exports = (server) ->
 
     app.get path, (req, res) ->
         res.send
+            type: 'table'
             children: ['rows']
             # TODO: implement resources for children 'columns', 'constraints', 'indexes', 'rules', 'triggers'
 

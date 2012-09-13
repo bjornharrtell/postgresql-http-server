@@ -14,6 +14,7 @@ module.exports = (server) ->
             callback: (result) ->
                 versionName = result.rows[0].character_value
                 res.send
+                    type: 'server_root'
                     version: null
                     version_human: versionName
                     description: "PostgreSQL #{versionName}"

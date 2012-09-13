@@ -13,4 +13,5 @@ module.exports = (server) ->
             callback: (result) ->
                 databaseNames = (row.datname for row in result.rows)
                 res.send
+                    type: 'databases'
                     children: databaseNames
