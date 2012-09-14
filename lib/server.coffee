@@ -24,18 +24,23 @@ start = (argv) ->
         log.info "Enable Cross-origin Resource Sharing" 
         app.options '/*', (req,res,next) ->
             res.header 'Access-Control-Allow-Origin', '*'
-            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with'
+            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
             next()
 
         app.get '/*', (req,res,next) ->
             res.header 'Access-Control-Allow-Origin', '*'
-            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with'
+            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
+            next()
+        
+        app.post '/*', (req,res,next) ->
+            res.header 'Access-Control-Allow-Origin', '*'
+            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
             next()
 
     log.info "Setting up resources"
     resources.root exports
     resources.db exports
-    resources.database exports
+    resources.database exports, argv.raw
     resources.schemas exports
     resources.schema exports
     resources.tables exports

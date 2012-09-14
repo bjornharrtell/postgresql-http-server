@@ -6,6 +6,12 @@ pg = require 'pg'
 lexer = require './lexer'
 
 module.exports = (log, connectionString, database) ->
+    ###
+    config.sql      - sql to query
+    config.res      - response to send query results to (or eventual error)
+    config.values   - parameter values
+    config.callback - callback to be called on successful query with a single argument containing the query result
+    ###
     query = (config) ->
         connectionStringDb = connectionString + "/" + (config.database || database)
     

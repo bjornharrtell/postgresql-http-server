@@ -19,11 +19,13 @@ optimist.options 'user',
     default : process.env.USER
 optimist.options 'password',
     describe : 'PostgreSQL password'
+optimist.options 'raw',
+    describe : 'Enable raw SQL usage'
 optimist.options 'cors',
     describe : 'Enable CORS support'
 optimist.options 'help',
     describe : 'Show this message'
-argv = optimist.boolean('cors')
+argv = optimist.boolean('raw').boolean('cors')
     .demand(['port', 'dbhost', 'dbport', 'database', 'user'])
     .argv
 

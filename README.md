@@ -57,7 +57,6 @@ expects a single JSON object with properties corresponding to column names.
 * Optionally use authenticated user/password to connect to DB
 * Handle ORDER BY via orderby param
 * Handle PostGIS data
-* Optionally allow raw SQL
 
 ## License 
 
