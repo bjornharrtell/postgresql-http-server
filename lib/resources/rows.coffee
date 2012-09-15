@@ -23,6 +23,7 @@ module.exports = (server) ->
         db.parseWhere config, req.query.where
         db.parseLimit config, req.query.limit
         db.parseOffset config, req.query.offset
+        db.parseOrderBy config, req.query.orderby
         
         db.query config
         

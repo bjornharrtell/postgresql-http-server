@@ -54,6 +54,9 @@ module.exports = (log, connectionString, database) ->
         config.sql += " OFFSET $#{config.count}"
         config.values.push parseInt offset
         config.count += 1
+        
+    parseOrderBy = (config, orderby) -> if orderby
+        config.sql += " ORDER BY #{orderby}"
     
     parseRow = (row) ->
         fields = []
@@ -75,5 +78,6 @@ module.exports = (log, connectionString, database) ->
     parseWhere: parseWhere
     parseLimit: parseLimit
     parseOffset: parseOffset
+    parseOrderBy: parseOrderBy
     parseRow: parseRow
 

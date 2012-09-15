@@ -2,15 +2,13 @@
 
 Attempt to implement something like the proposal at http://wiki.postgresql.org/wiki/HTTP_API
 
-**DISCLAIMER**: Experimental work at this time.
-
 [![Build Status](https://secure.travis-ci.org/bjornharrtell/postgresql-http-server.png?branch=master)](http://travis-ci.org/bjornharrtell/postgresql-http-server)
 
 ## Installing
 
 NOTE: Requires node.js
 
-    # sudo npm install postgresql-http-server -g
+    # npm install postgresql-http-server
 
 ## Usage
 
@@ -18,13 +16,14 @@ NOTE: Requires node.js
     PostgreSQL HTTP API Server
     
     Options:
-      --port      HTTP Server port     [required]  [default: 3000]
-      --dbhost    PostgreSQL host      [required]  [default: "localhost"]
-      --dbport    PostgreSQL port      [required]  [default: 5432]
-      --database  PostgreSQL database  [required]  [default: <user>]
-      --user      PostgreSQL username  [required]  [default: <user>]
+      --port      HTTP Server port      [required]  [default: 3000]
+      --dbhost    PostgreSQL host       [required]  [default: "localhost"]
+      --dbport    PostgreSQL port       [required]  [default: 5432]
+      --database  PostgreSQL database   [required]  [default: <user>]
+      --user      PostgreSQL username   [required]  [default: <user>]
       --password  PostgreSQL password
-      --cors      Enable CORS support  [boolean]
+      --raw       Enable raw SQL usage  [boolean]
+      --cors      Enable CORS support   [boolean]
       --help      Show this message
 
 ## API Usage
@@ -40,14 +39,17 @@ do the following operations:
     Retrieve rows (GET), update rows (PUT) or create a new row (POST) at:
     /db/testdb/schemas/public/tables/testtable/rows
 
-The above resources accepts URL encoded parameters where, limit and offset
-where applicable. Example:
+The above resources accepts URL encoded parameters where, limit, offset
+and orderby where applicable. Example:
 
     GET a maximum of 10 rows where cost>100 at:
     /db/testdb/schemas/public/tables/testtable/rows?where=cost%3E100&limit=10
 
 The default and currently the only dataformat is JSON. POSTing or PUTing
-expects a single JSON object with properties corresponding to column names.
+expects a JSON object with properties corresponding to column names.
+
+Raw SQL queries can be POSTed to the database resource. Expected data
+is a JSON object with the SQL string as property named "sql".
 
 ## TODOs
 
@@ -55,7 +57,6 @@ expects a single JSON object with properties corresponding to column names.
 * Stream row data
 * Configurable max rows hard limit
 * Optionally use authenticated user/password to connect to DB
-* Handle ORDER BY via orderby param
 * Handle PostGIS data
 
 ## License 
