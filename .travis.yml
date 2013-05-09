@@ -4,7 +4,7 @@ node_js:
 env:
   - NODE_ENV="development"
 before_install:
-  - echo "yes" | sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+  - echo "yes" | sudo apt-add-repository ppa:0k53d-karl-f830m/postgis
   - sudo apt-get update
   - sudo apt-get install -qq postgis
 before_script:
