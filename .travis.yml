@@ -3,6 +3,10 @@ node_js:
   - 0.8
 env:
   - NODE_ENV="development"
+before_install:
+  - echo "yes" | sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+  - sudo apt-get update
+  - sudo apt-get install -qq postgis
 before_script:
   - psql -c "CREATE DATABASE test;" -U postgres
   - psql -f ./test/sql/init.sql -U postgres -d test
