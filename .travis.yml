@@ -3,7 +3,6 @@ node_js:
   - 0.8
 env:
   - NODE_ENV="development"
-  - NODE_ENV="development"
 before_script:
   - psql -c "CREATE DATABASE test;" -U postgres
   - psql -f ./test/sql/init.sql -U postgres -d test
