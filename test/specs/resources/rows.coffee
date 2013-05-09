@@ -52,7 +52,8 @@ describe 'Rows resource', ->
             headers:
                 'Content-Type': 'application/json'
             body:
-                name: 'updatedfirst'
+                name: 'updatedfirst',
+                geom: '{"type":"Point","coordinates":[-48.23456,20.12345]}'
             callback: (res, data) ->
                 assert res.statusCode is 200, "#{res.statusCode} should be 200"
                 done()
@@ -62,9 +63,9 @@ describe 'Rows resource', ->
             path: path + "?where=name%3D'updatedfirst'"
             method: 'GET'
             callback: (res, data) ->
-                assert data.length is 1, '#{data.length} should be 1'
+                assert data.length is 1, "#{data.length} should be 1"
                 done()
-    
+
     it 'should DELETE all records', (done) ->
         test
             path: path
@@ -72,3 +73,4 @@ describe 'Rows resource', ->
             callback: (res, data) ->
                 assert res.statusCode is 200, "#{res.statusCode} should be 200"
                 done()
+

@@ -11,6 +11,7 @@ module.exports = (server) ->
 
     app.get path, (req, res) ->
         table = parseTable req
+        # TODO: instead of *, use fields from schema information and represent Geometry types using ST_AsGeoJSON
         config =
             sql: "SELECT * FROM #{table}"
             values: []
