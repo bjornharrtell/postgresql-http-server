@@ -1,6 +1,6 @@
 express = require 'express'
 log = new (require('log'))(if process.env.NODE_ENV is 'development' then 'debug' else 'info')
-app = express.createServer()
+app = express()
 resources = require './resources'
 
 app.configure ->
@@ -47,9 +47,9 @@ start = (argv) ->
     resources.table exports
     resources.rows exports
     resources.row exports
-        
+    
     app.listen argv.port, -> 
-        log.info "Listening on port #{app.address().port} in #{app.settings.env} mode"
+        log.info "Listening on port #{argv.port} in #{app.settings.env} mode"
 
 exports.log = log
 exports.app = app
