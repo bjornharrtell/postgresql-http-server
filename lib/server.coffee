@@ -47,6 +47,7 @@ start = (argv) ->
     resources.table exports
     resources.rows exports
     resources.row exports
+    resources.columns exports
     
     app.listen argv.port, -> 
         log.info "Listening on port #{argv.port} in #{app.settings.env} mode"

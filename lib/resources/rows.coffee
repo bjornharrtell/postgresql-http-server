@@ -10,10 +10,10 @@ module.exports = (server) ->
     path = '/db/:databaseName/schemas/:schemaName/tables/:tableName/rows'
 
     app.get path, (req, res) ->
+        fields = req.query.select ? '*'
         table = parseTable req
-        # TODO: instead of *, use fields from schema information and represent Geometry types using ST_AsGeoJSON
         config =
-            sql: "SELECT * FROM #{table}"
+            sql: "SELECT #{fields} FROM #{table}"
             values: []
             count: 1
             res: res

@@ -8,3 +8,4 @@ module.exports =
     table: require './table'
     rows: require './rows'
     row: require './row'
+    columns: require './columns'

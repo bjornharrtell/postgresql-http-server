@@ -39,11 +39,14 @@ do the following operations:
     Retrieve rows (GET), update rows (PUT) or create a new row (POST) at:
     /db/testdb/schemas/public/tables/testtable/rows
 
-The above resources accepts URL encoded parameters where, limit, offset
-and orderby where applicable. Example:
+The above resources accepts parameters select, where, limit, offset
+and orderby where applicable. Examples:
 
     GET a maximum of 10 rows where cost>100 at:
-    /db/testdb/schemas/public/tables/testtable/rows?where=cost%3E100&limit=10
+    /db/testdb/schemas/public/tables/testtable/rows?where=cost>100&limit=10
+    
+    GET rows with fields id and geom (as WKT) intersecting a polygon
+    /db/testdb/schemas/public/tables/testtable/rows?select=id,ST_AsText(geom) as geom&where=st_intersects(geom,'POLYGON((10 10,10 100,100 100,100 10,10 10))'::geometry)
 
 The default and currently the only dataformat is JSON. POSTing or PUTing
 expects a JSON object with properties corresponding to column names.
@@ -57,7 +60,6 @@ is a JSON object with the SQL string as property named "sql".
 * Stream row data
 * Configurable max rows hard limit
 * Optionally use authenticated user/password to connect to DB
-* Handle PostGIS data
 
 ## License 
 
