@@ -4,7 +4,7 @@ node_js:
 env:
   - NODE_ENV="development"
 before_install:
-  - sudo apt-get install -qq postgis
+  - sudo apt-get install -qq postgis postgresql-9.1-postgis
   - createdb -U postgres template_postgis
   - psql -U postgres -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql
   - psql -U postgres -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql
