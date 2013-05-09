@@ -5,6 +5,10 @@ env:
   - NODE_ENV="development"
 before_install:
   - sudo apt-get install -qq postgis
+  - su postgres -c 'createdb -E UTF8 -U postgres template_postgis'
+  - su postgres -c 'createlang -d template_postgis plpgsql'
+  - su postgres -c 'psql -U postgres -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql'
+  - su postgres -c 'psql -U postgres -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql'
 before_script:
   - psql -c "CREATE DATABASE test TEMPLATE template_postgis;" -U postgres
   - psql -f ./test/sql/init.sql -U postgres -d test
