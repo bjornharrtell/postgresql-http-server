@@ -22,13 +22,14 @@ module.exports = (log, connectionString, database) ->
         
         callback = (err, result) ->
             if err
-                log.error JSON.stringify err
-                config.res.send err, 500
+                log.error err.message
+                config.res.send 500, err.message
             else
                 config.callback result
         
-        pg.connect connectionStringDb, (err, client) ->
+        pg.connect connectionStringDb, (err, client, done) ->
             if err then callback err else client.query config.sql, config.values || [], callback
+            done()
 
     parseWhere = (config, where) -> if where
         config.sql += " WHERE "
