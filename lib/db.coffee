@@ -66,7 +66,9 @@ module.exports = (log, connectionString, database) ->
         count = 1
         for k,v of row
             fields.push "\"#{k}\""
-            params.push if k is 'geom' then "ST_GeomFromGeoJSON($#{count})" else "$#{count}"
+            params.push "$#{count}"
+            # TODO: use something like the below to accept GeoJSON instead of WKT
+            #params.push if k is 'geom' then "ST_GeomFromGeoJSON($#{count})" else "$#{count}"
             values.push v
             count += 1
         

@@ -53,7 +53,7 @@ describe 'Rows resource', ->
                 'Content-Type': 'application/json'
             body:
                 name: 'updatedfirst',
-                geom: '{"type":"Point","coordinates":[-48.23456,20.12345]}'
+                geom: 'POINT (-48.23456 20.12345)'
             callback: (res, data) ->
                 assert res.statusCode is 200, "#{res.statusCode} should be 200"
                 done()

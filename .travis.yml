@@ -4,10 +4,8 @@ node_js:
 env:
   - NODE_ENV="development"
 before_install:
-  - echo "yes" | sudo apt-add-repository ppa:0k53d-karl-f830m/postgis
-  - sudo apt-get update
   - sudo apt-get install -qq postgis
 before_script:
-  - psql -c "CREATE DATABASE test;" -U postgres
+  - psql -c "CREATE DATABASE test TEMPLATE template_postgis;" -U postgres
   - psql -f ./test/sql/init.sql -U postgres -d test
   - ./bin/postgresql-http-server --user postgres --database test &
