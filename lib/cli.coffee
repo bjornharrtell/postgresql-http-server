@@ -32,4 +32,6 @@ argv = optimist.boolean('raw').boolean('cors')
 if argv.help
     console.log optimist.help()
 else
-    require('./server').start(argv)
+    Server = require('./server')
+    server = new Server()
+    server.start(argv)

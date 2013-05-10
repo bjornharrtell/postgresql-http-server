@@ -1,57 +1,69 @@
 express = require 'express'
-log = new (require('log'))(if process.env.NODE_ENV is 'development' then 'debug' else 'info')
-app = express()
-resources = require './resources'
 
-app.configure ->
-  app.use express.bodyParser()
-  app.use express.methodOverride()
-
-app.configure 'development', ->
-    app.use express.errorHandler { dumpExceptions: true, showStack: true }
-
-app.configure 'production', ->
-    app.use express.errorHandler()
-
-start = (argv) ->
-    passwordString = if argv.password then ":#{argv.password}" else ""
-    connectionString = "tcp://#{argv.user}#{passwordString}@#{argv.dbhost}"
-    log.info "Using connection string #{connectionString}"
-
-    exports.db = require('./db')(log, connectionString, argv.database)
+class Server
+  constructor: (app) ->
+    @log = new (require('log'))(if process.env.NODE_ENV is 'development' then 'debug' else 'info')
     
-    if argv.cors
-        log.info "Enable Cross-origin Resource Sharing" 
-        app.options '/*', (req,res,next) ->
-            res.header 'Access-Control-Allow-Origin', '*'
-            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
-            next()
+    if not app?
+      app = express()
+      app.configure ->
+        app.use express.bodyParser()
+        app.use express.methodOverride()
+      app.configure 'development', ->
+      app.use express.errorHandler { dumpExceptions: true, showStack: true }
 
-        app.get '/*', (req,res,next) ->
-            res.header 'Access-Control-Allow-Origin', '*'
-            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
-            next()
-        
-        app.post '/*', (req,res,next) ->
-            res.header 'Access-Control-Allow-Origin', '*'
-            res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
-            next()
-
-    log.info "Setting up resources"
-    resources.root exports
-    resources.db exports
-    resources.database exports, argv.raw
-    resources.schemas exports
-    resources.schema exports
-    resources.tables exports
-    resources.table exports
-    resources.rows exports
-    resources.row exports
-    resources.columns exports
+      app.configure 'production', ->
+          app.use express.errorHandler()
     
-    app.listen argv.port, -> 
-        log.info "Listening on port #{argv.port} in #{app.settings.env} mode"
+    @app = app
+  
+  # Initialize 
+  # @param [Object] options
+  # @option options [String] dbhost PostgreSQL host
+  # @option options [String] dbport PostgreSQL port
+  # @option options [String] database PostgreSQL database
+  # @option options [String] user PostgreSQL username
+  # @option options [String] password PostgreSQL password
+  setup: (options) ->
+    passwordString = if options.password then ":#{options.password}" else ""
+    connectionString = "tcp://#{options.user}#{passwordString}@#{options.dbhost}"
+    @log.info "Using connection string #{connectionString}"
 
-exports.log = log
-exports.app = app
-exports.start = start
+    @db = require('./db')(@log, connectionString, options.database)
+    
+    if options.cors
+      @log.info "Enable Cross-origin Resource Sharing" 
+      @app.options '/*', (req,res,next) ->
+        res.header 'Access-Control-Allow-Origin', '*'
+        res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
+        next()
+
+      @app.get '/*', (req,res,next) ->
+        res.header 'Access-Control-Allow-Origin', '*'
+        res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
+        next()
+      
+      @app.post '/*', (req,res,next) ->
+        res.header 'Access-Control-Allow-Origin', '*'
+        res.header 'Access-Control-Allow-Headers', 'origin, x-requested-with, content-type'
+        next()
+
+    @log.info "Setting up resources"
+    resources = require './resources'
+    resources.root @
+    resources.db @
+    resources.database @, options.raw
+    resources.schemas @
+    resources.schema @
+    resources.tables @
+    resources.table @
+    resources.rows @
+    resources.row @
+    resources.columns @
+  
+  start: (argv) ->
+    @setup argv
+    @app.listen argv.port, => 
+      @log.info "Listening on port #{argv.port} in #{@app.settings.env} mode"
+
+module.exports = Server
