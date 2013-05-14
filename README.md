@@ -61,13 +61,14 @@ is a JSON object with the SQL string as property named "sql".
 * Use real primary key (current single row operations assume a primary key named id)
 * Stream row data
 * Configurable max rows hard limit
-* Optionally use authenticated user/password to connect to DB
+* Optional security "firewall" (initially no access, open access to paths/operations based on configurable rules)
+* Use as "plugin" to your existing express application
 
 ## License 
 
 The MIT License (MIT)
 
-Copyright (c) 2012 Björn Harrtell
+Copyright (c) 2012-2013 Björn Harrtell
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
