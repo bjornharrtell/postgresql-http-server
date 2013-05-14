@@ -1,4 +1,6 @@
 express = require 'express'
+auth = require './basic_auth'
+argv = require('optimist').argv
 
 class Server
   constructor: (app) ->
@@ -9,12 +11,14 @@ class Server
       app.configure ->
         app.use express.bodyParser()
         app.use express.methodOverride()
+        
       app.configure 'development', ->
       app.use express.errorHandler { dumpExceptions: true, showStack: true }
 
       app.configure 'production', ->
           app.use express.errorHandler()
-    
+      if argv.secure 
+        app.use auth.secureAPI
     @app = app
   
   # Initialize 
