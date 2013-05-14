@@ -24,6 +24,8 @@ NOTE: Requires node.js
       --password  PostgreSQL password
       --raw       Enable raw SQL usage  [boolean]
       --cors      Enable CORS support   [boolean]
+      --secure    Enable Basic Auth support  [boolean]
+                  (configured via PG_BASIC_PASS and PG_BASIC_USER) 
       --help      Show this message
 
 ## API Usage
