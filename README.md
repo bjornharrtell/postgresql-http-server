@@ -1,5 +1,7 @@
 # PostgreSQL HTTP API Server
 
+NOTE: This project is on indefinite hold and has been superceded by [jdbc-http-server](https://github.com/bjornharrtell/jdbc-http-server)
+
 Attempt to implement something like the proposal at http://wiki.postgresql.org/wiki/HTTP_API
 
 [![Build Status](https://secure.travis-ci.org/bjornharrtell/postgresql-http-server.png?branch=master)](http://travis-ci.org/bjornharrtell/postgresql-http-server)
