@@ -1,5 +1,8 @@
 express = require 'express'
-auth = require './basic_auth'
+bodyParser = require 'body-parser'
+errorhandler = require 'errorhandler'
+methodOverride = require 'method-override'
+#auth = require './basic_auth'
 argv = require('optimist').argv
 
 class Server
@@ -8,17 +11,16 @@ class Server
     
     if not app?
       app = express()
-      app.configure ->
-        app.use express.bodyParser()
-        app.use express.methodOverride()
-        
-      app.configure 'development', ->
-      app.use express.errorHandler { dumpExceptions: true, showStack: true }
-
-      app.configure 'production', ->
-          app.use express.errorHandler()
-      if argv.secure 
-        app.use auth.secureAPI
+      app.use bodyParser()
+      app.use methodOverride()
+      
+      if process.env.NODE_ENV == 'development'
+        app.use errorhandler { dumpExceptions: true, showStack: true }
+      
+      if process.env.NODE_ENV == 'production'
+        app.use errorhandler()
+      #if argv.secure 
+        #app.use auth.secureAPI
     @app = app
   
   # Initialize 

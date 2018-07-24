@@ -5,6 +5,8 @@ Helper functions for DB access and SQL parsing
 pg = require 'pg'
 lexer = require './lexer'
 
+client = new pg.Client()
+
 module.exports = (log, connectionString, database) ->
     ###
     config.sql      - sql to query
@@ -27,7 +29,7 @@ module.exports = (log, connectionString, database) ->
             else
                 config.callback result
         
-        pg.connect connectionStringDb, (err, client, done) ->
+        client.connect connectionStringDb, (err, client, done) ->
             if err then callback err else client.query config.sql, config.values || [], callback
             done()
 
